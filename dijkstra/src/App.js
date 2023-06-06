@@ -17,23 +17,35 @@ function Node({ row, col, isWall, isStart, isEnd, onMouseDown, onMouseEnter, onM
   );
 }
 
+function createGrid(startPos, endPos) {
+  const grid = [];
+  for (let row = 0; row < ROWS; row++) {
+    const currentRow = [];
+    for (let col = 0; col < COLS; col++) {
+      currentRow.push({ 
+        row, 
+        col, 
+        isStart: row === startPos.row && col === startPos.col, 
+        isEnd: row === endPos.row && col === endPos.col, 
+        isWall: false, 
+        distance: Infinity, 
+        isVisited: false, 
+        previousNode: null 
+      });
+    }
+    grid.push(currentRow);
+  }
+  return grid;
+}
+
 function App() {
-  const [grid, setGrid] = useState(createGrid());
-  const [isMousePressed, setIsMousePressed] = useState(false);
   const [startPos, setStartPos] = useState({ row: 7, col: 5 });
   const [endPos, setEndPos] = useState({ row: 7, col: 25 });
+  const [grid, setGrid] = useState(createGrid(startPos, endPos));
+  const [isMousePressed, setIsMousePressed] = useState(false);
 
-  function createGrid() {
-    const grid = [];
-    for (let row = 0; row < ROWS; row++) {
-      const currentRow = [];
-      for (let col = 0; col < COLS; col++) {
-        currentRow.push({ row, col, isStart: false, isEnd: false, isWall: false, distance: Infinity, isVisited: false, previousNode: null });
-      }
-      grid.push(currentRow);
-    }
-    return grid;
-  }
+
+  
 
   function toggleWall(row, col) {
     const newGrid = [...grid];
@@ -58,8 +70,23 @@ function App() {
   }
 
   function clearBoard() {
-    setGrid(createGrid());
+    const newGrid = createGrid(startPos, endPos);
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        newGrid[row][col].distance = Infinity;
+        newGrid[row][col].isVisited = false;
+        newGrid[row][col].previousNode = null;
+        const nodeDOM = document.getElementById(`node-${row}-${col}`);
+        nodeDOM.className = newGrid[row][col].isStart
+          ? 'node node-start'
+          : newGrid[row][col].isEnd
+          ? 'node node-end'
+          : 'node';
+      }
+    }
+    setGrid(newGrid);
   }
+  
 
   function visualizeDijkstra() {
     const visitedNodesInOrder = dijkstra();
