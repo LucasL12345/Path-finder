@@ -1,0 +1,42 @@
+.App {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.tab {
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+}
+
+.node {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+.node-start {
+  background-color: blue;
+}
+
+.node-end {
+  background-color: red;
+}
+
+.node-wall {
+  background-color: black;
+}
+
+button {
+  margin: 5px;
+}
